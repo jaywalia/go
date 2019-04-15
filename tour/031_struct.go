@@ -15,7 +15,7 @@ type line struct {
 	start, end point
 }
 
-func (l line) slope() (floaclet64, error) {
+func (l line) slope() (float64, error) {
 	n := l.end.y - l.start.y
 	d := l.end.x - l.start.x
 	if d == 0 {
