@@ -19,6 +19,7 @@ func main() {
 	delete(m, "Answer")
 	fmt.Println("The value:", m["Answer"])
 
+	// test if val exists
 	v, ok := m["Answer"]
 	fmt.Println("The value:", v, "Present?", ok)
 }
