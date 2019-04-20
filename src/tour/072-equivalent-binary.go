@@ -50,34 +50,57 @@ func (t *Tree) String() string {
 	return "(" + s + ")"
 }
 
-func walk(t *Tree, ch chan int) {
+func walkTree(t *Tree, ch chan int) {
+	walk(t, ch)
+	close(ch)
+}
 
+func walk(t *Tree, ch chan int) {
+	if t.Left != nil {
+		walk(t.Left, ch)
+	}
+	ch <- t.Value
+	if t.Right != nil {
+		walk(t.Right, ch)
+	}
 }
 
 func same(t1, t2 *Tree) bool {
 	c1 := make(chan int)
 	c2 := make(chan int)
 
-	go walk(t1, c1)
-	go walk(t2, c2)
+	go walkTree(t1, c1)
+	go walkTree(t2, c2)
 
-	for {
-		n1 := <-c1
-		n2 := <-c2
-
-		if n1 != n2 {
+	// compare items in c1 to c2
+	for i := range c1 {
+		j := <-c2
+		if i != j {
 			return false
 		}
 	}
+
+	// items left in c2
+	// then not equal
+	for _ = range c2 {
+		return false
+	}
+	// else equal
 
 	return true
 }
 
 func main() {
 	fmt.Println("solve tree problem")
-	t1 := New(10)
-	t2 := New(10)
+	t1 := New(1)
+	t2 := New(3)
 
 	fmt.Println(t1)
 	fmt.Println(t2)
+
+	if same(t1, t2) {
+		fmt.Println("same trees")
+	} else {
+		fmt.Println("different trees")
+	}
 }
