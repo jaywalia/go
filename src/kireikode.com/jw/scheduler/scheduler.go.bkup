@@ -1,0 +1,90 @@
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+type centerHours struct {
+	c     center
+	hours []schedule
+}
+
+type schedule struct {
+	dayOfWeek time.Time
+	opensAt   string
+	closesAt  string
+}
+
+func (s schedule) String() string {
+	return fmt.Sprintf("%s [%s to %s]", s.dayOfWeek, s.opensAt, s.closesAt)
+}
+
+//====================================================================================================
+
+func getTCDefaultHours(c center, d time.Time) schedule {
+	switch c {
+	case gar, cbb, aah:
+		switch d.Weekday() {
+		case time.Monday, time.Tuesday, time.Wednesday, time.Thursday, time.Friday:
+			return schedule{d, "9:00", "19:00"}
+		case time.Saturday:
+			return schedule{d, "9:00", "15:00"}
+		case time.Sunday:
+			return schedule{d, "0:00", "0:00"}
+		}
+	}
+	return schedule{}
+}
+
+func getTCOverloadHours(c center, d time.Time) schedule {
+	s := schedule{d, "", ""}
+	switch c {
+	case center.gar:
+		switch d {
+		case "2019/4/21":
+			s = schedule{d, "9:00", "21:00"}
+		}
+	case center.cbb:
+		switch d {
+
+		}
+	}
+	return s
+}
+
+//====================================================================================================
+
+func isTCOpen(c center, date time.Time) bool {
+	// mostly open on all days except sundays
+	// mostly closed on sundays
+	switch date.Weekday() {
+	case time.Monday, time.Tuesday, time.Wednesday,
+		time.Thursday, time.Friday, time.Saturday:
+		{
+			return true
+		}
+	case time.Sunday:
+		{
+			if isTCOopenOnSunday(c, date) {
+				return true
+			}
+			return false
+		}
+	}
+	return false
+}
+
+//====================================================================================================
+
+func main() {
+
+	centers := getTestingCenters()
+	for _, c := range centers {
+		fmt.Println(c)
+
+	}
+	// read student class schedule
+	// pick a week at first center
+	//
+}
