@@ -5,6 +5,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"math"
 )
 
 type point struct {
@@ -15,6 +16,11 @@ type line struct {
 	start, end point
 }
 
+type circle struct {
+	center point
+	radius float64
+}
+
 func (l line) slope() (float64, error) {
 	n := l.end.y - l.start.y
 	d := l.end.x - l.start.x
@@ -23,6 +29,10 @@ func (l line) slope() (float64, error) {
 	}
 
 	return n / d, nil
+}
+
+func (c circle) area() float64 {
+	return math.Pi * c.radius * c.radius
 }
 
 func main() {
@@ -39,4 +49,8 @@ func main() {
 	l2 := line{start: point{x: 0, y: 0}, end: point{x: 0, y: 2}}
 	fmt.Println(l2)
 	fmt.Println(l2.slope())
+
+	c := circle{p, 2.0}
+	fmt.Println(c.area())
+
 }
